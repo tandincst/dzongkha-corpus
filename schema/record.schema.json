@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/dzongkha-corpus/record.schema.json",
+  "title": "Dzongkha corpus record",
+  "description": "One line of a .jsonl file in the Dzongkha corpus.",
+  "type": "object",
+  "required": [
+    "id",
+    "text",
+    "lang",
+    "script",
+    "source",
+    "domain",
+    "license",
+    "contributor_id",
+    "submitted_on",
+    "review_status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dz-[a-z0-9_-]+-[0-9]{4,}$",
+      "description": "Unique record ID, e.g. dz-yourid-0001"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Dzongkha text, UTF-8, NFC-normalized"
+    },
+    "lang": {
+      "const": "dz"
+    },
+    "script": {
+      "const": "Tibt"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Title, URL, or description of where the text comes from"
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Permanent link to the source, e.g. a Wikipedia permalink"
+    },
+    "revision_id": {
+      "type": "string",
+      "description": "Revision identifier of the source page, e.g. a Wikipedia oldid"
+    },
+    "author_publisher": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1600,
+      "maximum": 2100
+    },
+    "domain": {
+      "enum": [
+        "news",
+        "literature",
+        "education",
+        "legal",
+        "religious",
+        "encyclopedia",
+        "web",
+        "other"
+      ]
+    },
+    "license": {
+      "enum": [
+        "CC-BY-SA-4.0",
+        "CC-BY-4.0",
+        "CC0-1.0",
+        "public-domain",
+        "permission-granted"
+      ]
+    },
+    "permission_ref": {
+      "type": "string",
+      "description": "Reference to written permission; required when license is permission-granted"
+    },
+    "contributor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "submitted_on": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "review_status": {
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    }
+  },
+  "if": {
+    "properties": {
+      "license": {
+        "const": "permission-granted"
+      }
+    },
+    "required": [
+      "license"
+    ]
+  },
+  "then": {
+    "required": [
+      "permission_ref"
+    ]
+  }
+}
